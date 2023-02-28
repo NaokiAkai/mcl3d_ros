@@ -2,50 +2,14 @@
 <launch >
     <arg name="node_name" default="mcl" />
 
-    <!-- mcl_3dl -->
-    <arg name="use_sensor_points_merger" default="true" />
-    <arg name="map_yaml_file" default="$(find mcl3d_ros)/data/dist_map_mcl_3dl.yaml" />
-    <rosparam param="/$(arg node_name)/initial_pose" > [0.0, 0.0, 0.0, 0.0, 0.0, 180.0] </rosparam >
-    <arg name="use_odom_tf" default="true" />
-    <arg name="unknown_lambda" default="0.01" />
-    <arg name="range_max" default="30.0" />
-    <arg name="sensor_points_name" default="/velodyne_points" />
-    <arg name="odom_name" default="/odom" />
-    <arg name="imu_name" default="/imu/data" />
-    <arg name="imu_sample_freq" default="50.0" />
-    <arg name="voxel_leaf_size" default="0.2" />
-
-
-    <!-- hdl -->
-<!--
+    <!-- This is used for the test using mcl_3dl log data -->
     <arg name="use_sensor_points_merger" default="false" />
+
+    <!-- yaml file of a target environment -->
     <arg name="map_yaml_file" default="$(find mcl3d_ros)/data/dist_map_hdl.yaml" />
+
+    <!-- Initial pose (default initial pose is set for hdl log data) -->
     <rosparam param="/$(arg node_name)/initial_pose" > [0.0, 0.0, 1.8, 0.0, 0.0, 0.0] </rosparam >
-    <arg name="use_odom_tf" default="false" />
-    <arg name="unknown_lambda" default="0.001" />
-    <arg name="range_max" default="120.0" />
-    <arg name="odom_name" default="/odom" />
-    <arg name="sensor_points_name" default="/velodyne_points" />
-    <arg name="imu_name" default="/gpsimu_driver/imu_data" />
-    <arg name="imu_sample_freq" default="200.0" />
-    <arg name="voxel_leaf_size" default="1.0" />
- -->
-
-
-    <!-- KITTI -->
-<!--
-    <arg name="use_sensor_points_merger" default="false" />
-    <arg name="map_yaml_file" default="/media/akai/ssd/mcl3d_maps/kitti/04/dist_map_static_objects.yaml" />
-    <rosparam param="/$(arg node_name)/initial_pose" > [0.0, 0.0, 0.0, 0.0, 0.0, 90.0] </rosparam >
-    <arg name="use_odom_tf" default="false" />
-    <arg name="unknown_lambda" default="0.001" />
-    <arg name="range_max" default="120.0" />
-    <arg name="sensor_points_name" default="/velodyne_points" />
-    <arg name="odom_name" default="/odom" />
-    <arg name="imu_name" default="/imu/data" />
-    <arg name="imu_sample_freq" default="50.0" />
-    <arg name="voxel_leaf_size" default="1.0" />
- -->
 
 
     <!-- 0: measurement model optimization (similar to ICP scan matching) -->
@@ -60,40 +24,64 @@
     <!-- 3: class conditional measurement model -->
     <arg name="measurement_model_type" default="3" />
 
-
-    <arg name="z_hit" default="0.9" />
-    <arg name="z_rand" default="0.05" />
-    <arg name="z_max" default="0.05" />
-    <arg name="var_hit" default="0.4" />
-    <arg name="range_reso" default="0.1" />
-
-    <arg name="particles_name" default="/particles" />
-    <arg name="opt_particles_name" default="/optimized_particles" />
-    <arg name="pose_name" default="/mcl_pose" />
-    <arg name="opt_pose_name" default="/opt_pose" />
-
-    <arg name="particle_num" default="1000" />
-
-    <arg name="sensor_points_num" default="1000" />
-
-    <arg name="map_points_name" default="/map_points" />
-
+    <!-- TF frame names -->
     <arg name="map_frame" default="map" />
     <arg name="odom_frame" default="odom" />
     <arg name="base_link_frame" default="base_link" />
     <arg name="laser_frame" default="velodyne" />
     <arg name="opt_pose_frame" default="opt_pose" />
 
+    <!-- input message names -->
+    <arg name="sensor_points_name" default="/velodyne_points" />
+    <arg name="odom_name" default="/odom" />
+    <arg name="imu_name" default="/gpsimu_driver/imu_data" />
+
+    <!-- use INS or not -->
     <arg name="use_odom" default="false" />
     <arg name="use_imu" default="false" />
 
+    <!-- output msaage names -->
+    <arg name="particles_name" default="/particles" />
+    <arg name="opt_particles_name" default="/optimized_particles" />
+    <arg name="pose_name" default="/mcl_pose" />
+    <arg name="opt_pose_name" default="/opt_pose" />
+
+    <!-- IMU frequency. This must be appropriately set if your IMU node does not output orientation. -->
+    <arg name="imu_sample_freq" default="200.0" />
+
+    <!-- resolution for voxel grid filter that will be applied to the sensor points before the scan registration -->
+    <arg name="voxel_leaf_size" default="1.0" />
+
+    <!-- number of particles -->
+    <arg name="particle_num" default="1000" />
+
+    <!-- number of sensor points used for likelihood calculation (this is used only when localization mode is 1)-->
+    <arg name="sensor_points_num" default="1000" />
+
+    <!-- measurement model parameters -->
+    <arg name="z_hit" default="0.9" />
+    <arg name="z_rand" default="0.05" />
+    <arg name="z_max" default="0.05" />
+    <arg name="var_hit" default="0.4" />
+    <arg name="range_reso" default="0.1" />
+    <arg name="range_max" default="120.0" />
+    <arg name="unknown_lambda" default="0.001" />
+    <!-- range_max and unknown_lambda must be appropriately set -->
+    <!-- e.g., unknown_lambda is 0.001 if range_max is 120 m, and unknown_lambda is 0.01 if range_max is 30 m -->
+
+    <!-- transformation between base link to laser -->
     <rosparam param="/$(arg node_name)/base_link_2_laser" > [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] </rosparam >
 
+    <!-- mcl3d node will broadcast tf if true -->
     <arg name="broadcast_tf" default="true" />
-    <!-- <arg name="use_odom_tf" default="false" /> -->
 
+    <!-- make tf as map -> odom -> base_link -> laser if true, otherwise map -> base_link -> laser -->
+    <arg name="use_odom_tf" default="false" />
+
+    <!-- initial pose noise -->
     <rosparam param="/$(arg node_name)/initial_noise" > [0.1, 0.1, 0.1, 0.05, 0.05, 0.05] </rosparam >
 
+    <!-- motion noise parameters -->
     <rosparam param="/$(arg node_name)/odom_noise" >
         [0.5, 0.01, 0.01, 0.01, 0.01, 0.01,
          0.01, 0.5, 0.01, 0.01, 0.01, 0.01,
@@ -103,26 +91,48 @@
          0.01, 0.01, 0.01, 0.01, 0.01, 0.5]
     </rosparam >
 
+    <!-- use linear interpolation to predict particle poses if true -->
     <arg name="use_linear_interpolation" default="true" />
 
+    <!-- random particle rate. random particles are injected into re-sample phase if this value is larger than 0 -->
     <arg name="random_particle_rate" default="0.1" />
+
+    <!-- re-sample threshold set to effective sample size -->
     <arg name="resample_threshold" default="0.5" />
     <rosparam param="/$(arg node_name)/resample_noise" > [0.1, 0.1, 0.1, 0.05, 0.05, 0.05] </rosparam >
 
+    <!-- max iteration number for measurement model optimization -->
     <arg name="opt_max_iter_num" default="30" />
+
+    <!-- error threshold for correspondences -->
     <arg name="opt_max_error" default="0.5" />
 
+    <!-- convergence threshold set to errors -->
+    <arg name="convergence_threshold" default="0.02" />
+
+    <!-- number of particles sampled from the measurement model -->
     <arg name="optimized_particle_num" default="1000" />
+
+    <!-- scale factor for covariance against an optimization result -->
     <arg name="optimized_pose_cov_coef" default="1.0" />
 
+    <!-- GMM parameters used for likelihood calculation -->
     <arg name="gmm_postion_var" default="0.3" />
     <arg name="gmm_angle_var" default="0.1" />
 
+    <!-- parameters for IMU update -->
     <arg name="ahrs_filter_kp" default="0.0" />
     <arg name="ahrs_filter_ki" default="0.0" />
 
+    <!-- accept initialpose callback from rviz if true -->
     <arg name="use_initial_pose_cb" default="true" />
 
+    <!-- write estimation log if true -->
+    <!-- time mclx mcly mclz mclroll mclpitch mclyaw optx opty optz optroll optpitch optyaw -->
+    <!-- if localization mode is 0, mcl and opt are the same -->
+    <!-- if localization mode is 1, opt are zero -->
+    <!-- if localization mode is 2, mcl and opt are different -->
+    <!-- if localization mode is 3, mcl and opt are different and mcl represents ekf-based fusion result -->
     <arg name="log_file" default="/tmp/mcl3d_log.txt" />
     <arg name="write_log" default="true" />
 
@@ -189,6 +199,7 @@
 
         <param name="opt_max_iter_num" value="$(arg opt_max_iter_num)" type="int" />
         <param name="opt_max_error" value="$(arg opt_max_error)" type="double" />
+        <param name="convergence_threshold" value="$(arg convergence_threshold)" type="double" />
 
         <param name="optimized_particle_num" value="$(arg optimized_particle_num)" type="int" />
         <param name="optimized_pose_cov_coef" value="$(arg optimized_pose_cov_coef)" type="double" />

@@ -76,7 +76,7 @@ private:
     int maxLikelihoodParticleIdx_;
 
     int optMaxIterNum_;
-    double optMaxError_;
+    double optMaxError_, convergenceThreshold_;
     bool optHasConverged_;
 
     double randomParticleRate_, resampleThreshold_;
@@ -127,6 +127,7 @@ public:
     inline void setResampleNoise(Pose resampleNoise) { resampleNoise_ = resampleNoise; }
     inline void setOptMaxIterNum(int optMaxIterNum) { optMaxIterNum_ = optMaxIterNum; }
     inline void setOptMaxError(double optMaxError) { optMaxError_ = optMaxError; }
+    inline void setConvergenceThreshold(double convergenceThreshold) { convergenceThreshold_ = convergenceThreshold; }
     inline void setIMU(IMU imu) { imu_ = imu, imuAvailable_ = true; }
     inline void setOdomPose(Pose odomPose) { odomPose_ = odomPose; }
     inline void setOdomVelocities(Pose odomVel) { odomVel_ = odomVel; odomAvailable_ = true; }

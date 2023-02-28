@@ -1,5 +1,5 @@
 /****************************************************************************
- * als_ros: An Advanced Localization System for ROS use with 3D LiDAR
+ * mcl3d_ros: 3D Monte Carlo localization for ROS use
  * Copyright (C) 2023 Naoki Akai
  *
  * Licensed under the Apache License, Version 2.0 (the “License”);
@@ -76,6 +76,7 @@ MCL::MCL(void):
 
     optMaxIterNum_ = 30;
     optMaxError_ = 1.0;
+    convergenceThreshold_ = 0.02;
 
     useOmniModel_ = false;
     odomAvailable_ = false;
@@ -799,7 +800,7 @@ void MCL::optimizeMeasurementModel(pcl::PointCloud<pcl::PointXYZ>::Ptr sensorPoi
             }
             double ave = sum / (double)pointsSize;
             // printf("i = %d, sum = %lf, ave = %lf\n", i, sum, ave);
-            if (ave < 0.02) {
+            if (ave < convergenceThreshold_) {
                 optHasConverged_ = true;
                 approximateHessian_ = JTJ;
                 break;

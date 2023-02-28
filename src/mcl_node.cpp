@@ -1,5 +1,5 @@
 /****************************************************************************
- * als_ros: An Advanced Localization System for ROS use with 3D LiDAR
+ * mcl3d_ros: 3D Monte Carlo localization for ROS use
  * Copyright (C) 2023 Naoki Akai
  *
  * Licensed under the Apache License, Version 2.0 (the “License”);
@@ -216,11 +216,13 @@ public:
         mcl_.setResampleNoise(resampleNoise_);
 
         int optMaxIterNum = 30;
-        double optMaxError = 1.0;
+        double optMaxError = 1.0, convergenceThreshold = 0.02;
         nh_.param("opt_max_iter_num", optMaxIterNum, optMaxIterNum);
         nh_.param("opt_max_error", optMaxError, optMaxError);
+        nh_.param("convergence_threshold", convergenceThreshold, convergenceThreshold);
         mcl_.setOptMaxIterNum(optMaxIterNum);
         mcl_.setOptMaxError(optMaxError);
+        mcl_.setConvergenceThreshold(convergenceThreshold);
 
         // set fusion parameters
         int optParticleNum = 100;

@@ -2,6 +2,7 @@
 <launch >
     <arg name="node_name" default="pc_to_df" />
 
+    <!-- build a distance field from a given pcd file if true, otherwise use a ROS message -->
     <arg name="from_pcd_file" default="true" />
 
     <!-- if from_pcd_file is true, pcd_file must be appropriately set. -->
@@ -12,11 +13,17 @@
     <arg name="map_points_name" default="/map_points" />
 
     <!-- map parameters -->
+    <!-- map name -->
     <arg name="map_file_name" default="dist_map_mcl_3dl.bin" />
+
+    <!-- map resolutions. sub_map_resolution is actual resolution for the distance field -->
     <arg name="resolution" default="5.0" />
     <arg name="sub_map_resolution" default="0.1" />
+
+    <!-- map margin -->
     <arg name="map_margin" default="1.0" />
-    <!-- <arg name="yaml_file_path" default="$(find als_ros_3d)/data/dist_map_mcl_3dl.yaml" /> -->
+
+    <!-- yaml file -->
     <arg name="yaml_file_path" default="$(find mcl3d_ros)/data/dist_map_mcl_3dl.yaml" />
 
     <!-- from pcd file -->

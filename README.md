@@ -28,7 +28,7 @@ mcl3d_ros can efficiently perform 3D-LiDAR-based MCL. To achieve it, mcl3d_ros u
 # Install
 
 ```
-$ cd /your/catkin_ws/src/
+$ cd /your/catkin_ws/src
 $ git clone https://github.com/NaokiAkai/mcl3d_ros.git
 $ cd /your/catkin_ws
 $ catkin_make
@@ -46,10 +46,10 @@ We tested mcl3d_ros on Ubuntu 20.04 with Noetic.
 Please first prepare a pcd file of your target environment and build a distance field of the pcd file.
 
 ```
-$ roslaunch mcl3d_ros pc_to_df.launch pcd_file:=/your/pcd/file.pcd yaml_file_path:=/your/yaml/file.yaml yaml_file_path:=your_map_name.bin
+$ roslaunch mcl3d_ros pc_to_df.launch pcd_file:=/your/pcd/file.pcd yaml_file_path:=/your/yaml/file.yaml map_file_name:=your_map_name.bin
 ```
 
-A distance field can also be built from a point cloud published as a ROS message.
+The distance field is saved as a binary file and its parameters are saved at the given yaml file. A distance field can also be built from a point cloud published as a ROS message.
 
 Then, localization can be executed.
 
