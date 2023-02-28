@@ -1,0 +1,204 @@
+<!-- mcl.launch -->
+<launch >
+    <arg name="node_name" default="mcl" />
+
+    <!-- mcl_3dl -->
+    <arg name="use_sensor_points_merger" default="true" />
+    <arg name="map_yaml_file" default="$(find mcl3d_ros)/data/dist_map_mcl_3dl.yaml" />
+    <rosparam param="/$(arg node_name)/initial_pose" > [0.0, 0.0, 0.0, 0.0, 0.0, 180.0] </rosparam >
+    <arg name="use_odom_tf" default="true" />
+    <arg name="unknown_lambda" default="0.01" />
+    <arg name="range_max" default="30.0" />
+    <arg name="sensor_points_name" default="/velodyne_points" />
+    <arg name="odom_name" default="/odom" />
+    <arg name="imu_name" default="/imu/data" />
+    <arg name="imu_sample_freq" default="50.0" />
+    <arg name="voxel_leaf_size" default="0.2" />
+
+
+    <!-- hdl -->
+<!--
+    <arg name="use_sensor_points_merger" default="false" />
+    <arg name="map_yaml_file" default="$(find mcl3d_ros)/data/dist_map_hdl.yaml" />
+    <rosparam param="/$(arg node_name)/initial_pose" > [0.0, 0.0, 1.8, 0.0, 0.0, 0.0] </rosparam >
+    <arg name="use_odom_tf" default="false" />
+    <arg name="unknown_lambda" default="0.001" />
+    <arg name="range_max" default="120.0" />
+    <arg name="odom_name" default="/odom" />
+    <arg name="sensor_points_name" default="/velodyne_points" />
+    <arg name="imu_name" default="/gpsimu_driver/imu_data" />
+    <arg name="imu_sample_freq" default="200.0" />
+    <arg name="voxel_leaf_size" default="1.0" />
+ -->
+
+
+    <!-- KITTI -->
+<!--
+    <arg name="use_sensor_points_merger" default="false" />
+    <arg name="map_yaml_file" default="/media/akai/ssd/mcl3d_maps/kitti/04/dist_map_static_objects.yaml" />
+    <rosparam param="/$(arg node_name)/initial_pose" > [0.0, 0.0, 0.0, 0.0, 0.0, 90.0] </rosparam >
+    <arg name="use_odom_tf" default="false" />
+    <arg name="unknown_lambda" default="0.001" />
+    <arg name="range_max" default="120.0" />
+    <arg name="sensor_points_name" default="/velodyne_points" />
+    <arg name="odom_name" default="/odom" />
+    <arg name="imu_name" default="/imu/data" />
+    <arg name="imu_sample_freq" default="50.0" />
+    <arg name="voxel_leaf_size" default="1.0" />
+ -->
+
+
+    <!-- 0: measurement model optimization (similar to ICP scan matching) -->
+    <!-- 1: particle filter (it does not work usually if odometry and/or IMU are not available) -->
+    <!-- 2: fusion of particle-filter and optimization-based localizations -->
+    <!-- 3: extended kalman filter -->
+    <arg name="localization_mode" default="2" />
+
+    <!-- 0: directory use residual errors (need to carefully set opt_max_error and this must be positive) -->
+    <!-- 1: normal distribution (opt_max_error must be set from 0 to 1 if the measurement model type is 1, 2, and 3) -->
+    <!-- 2: likelihood field model -->
+    <!-- 3: class conditional measurement model -->
+    <arg name="measurement_model_type" default="3" />
+
+
+    <arg name="z_hit" default="0.9" />
+    <arg name="z_rand" default="0.05" />
+    <arg name="z_max" default="0.05" />
+    <arg name="var_hit" default="0.4" />
+    <arg name="range_reso" default="0.1" />
+
+    <arg name="particles_name" default="/particles" />
+    <arg name="opt_particles_name" default="/optimized_particles" />
+    <arg name="pose_name" default="/mcl_pose" />
+    <arg name="opt_pose_name" default="/opt_pose" />
+
+    <arg name="particle_num" default="1000" />
+
+    <arg name="sensor_points_num" default="1000" />
+
+    <arg name="map_points_name" default="/map_points" />
+
+    <arg name="map_frame" default="map" />
+    <arg name="odom_frame" default="odom" />
+    <arg name="base_link_frame" default="base_link" />
+    <arg name="laser_frame" default="velodyne" />
+    <arg name="opt_pose_frame" default="opt_pose" />
+
+    <arg name="use_odom" default="false" />
+    <arg name="use_imu" default="false" />
+
+    <rosparam param="/$(arg node_name)/base_link_2_laser" > [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] </rosparam >
+
+    <arg name="broadcast_tf" default="true" />
+    <!-- <arg name="use_odom_tf" default="false" /> -->
+
+    <rosparam param="/$(arg node_name)/initial_noise" > [0.1, 0.1, 0.1, 0.05, 0.05, 0.05] </rosparam >
+
+    <rosparam param="/$(arg node_name)/odom_noise" >
+        [0.5, 0.01, 0.01, 0.01, 0.01, 0.01,
+         0.01, 0.5, 0.01, 0.01, 0.01, 0.01,
+         0.01, 0.01, 0.5, 0.01, 0.01, 0.01,
+         0.01, 0.01, 0.01, 0.5, 0.01, 0.01,
+         0.01, 0.01, 0.01, 0.01, 0.5, 0.01,
+         0.01, 0.01, 0.01, 0.01, 0.01, 0.5]
+    </rosparam >
+
+    <arg name="use_linear_interpolation" default="true" />
+
+    <arg name="random_particle_rate" default="0.1" />
+    <arg name="resample_threshold" default="0.5" />
+    <rosparam param="/$(arg node_name)/resample_noise" > [0.1, 0.1, 0.1, 0.05, 0.05, 0.05] </rosparam >
+
+    <arg name="opt_max_iter_num" default="30" />
+    <arg name="opt_max_error" default="0.5" />
+
+    <arg name="optimized_particle_num" default="1000" />
+    <arg name="optimized_pose_cov_coef" default="1.0" />
+
+    <arg name="gmm_postion_var" default="0.3" />
+    <arg name="gmm_angle_var" default="0.1" />
+
+    <arg name="ahrs_filter_kp" default="0.0" />
+    <arg name="ahrs_filter_ki" default="0.0" />
+
+    <arg name="use_initial_pose_cb" default="true" />
+
+    <arg name="log_file" default="/tmp/mcl3d_log.txt" />
+    <arg name="write_log" default="true" />
+
+
+
+
+
+    <!-- nodes -->
+    <!-- Static TF from base link to laser -->
+    <node name="base_link_to_laser" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 $(arg base_link_frame) $(arg laser_frame) 100" />
+
+    <!-- This node marges several point clouds and outputs one point cloud. -->
+    <node name="sensor_points_merger" pkg="mcl3d_ros" type="sensor_points_merger" if="$(arg use_sensor_points_merger)"/>
+
+    <!-- Localizer -->
+    <node name="$(arg node_name)" pkg="mcl3d_ros" type="mcl" output="screen" >
+        <param name="map_yaml_file" value="$(arg map_yaml_file)" type="string" />
+
+        <param name="sensor_points_name" value="$(arg sensor_points_name)" type="string" />
+        <param name="odom_name" value="$(arg odom_name)" type="string" />
+        <param name="imu_name" value="$(arg imu_name)" type="string" />
+
+        <param name="particles_name" value="$(arg particles_name)" type="string" />
+        <param name="opt_particles_name" value="$(arg opt_particles_name)" type="string" />
+        <param name="pose_name" value="$(arg pose_name)" type="string" />
+        <param name="opt_pose_name" value="$(arg opt_pose_name)" type="string" />
+
+        <param name="map_frame" value="$(arg map_frame)" type="string" />
+        <param name="odom_frame" value="$(arg odom_frame)" type="string" />
+        <param name="base_link_frame" value="$(arg base_link_frame)" type="string" />
+        <param name="laser_frame" value="$(arg laser_frame)" type="string" />
+        <param name="opt_pose_frame" value="$(arg opt_pose_frame)" type="string" />
+
+        <param name="use_odom" value="$(arg use_odom)" type="bool" />
+        <param name="use_imu" value="$(arg use_imu)" type="bool" />
+
+        <param name="broadcast_tf" value="$(arg broadcast_tf)" type="bool" />
+        <param name="use_odom_tf" value="$(arg use_odom_tf)" type="bool" />
+        <param name="use_initial_pose_cb" value="$(arg use_initial_pose_cb)" type="bool" />
+
+        <param name="use_linear_interpolation" value="$(arg use_linear_interpolation)" type="bool" />
+
+        <param name="imu_sample_freq" value="$(arg imu_sample_freq)" type="double" />
+
+        <param name="localization_mode" value="$(arg localization_mode)" type="int" />
+        <param name="measurement_model_type" value="$(arg measurement_model_type)" type="int" />
+
+        <param name="particle_num" value="$(arg particle_num)" type="int" />
+
+        <param name="sensor_points_num" value="$(arg sensor_points_num)" type="int" />
+
+        <param name="random_particle_rate" value="$(arg random_particle_rate)" type="double" />
+        <param name="resample_threshold" value="$(arg resample_threshold)" type="double" />
+
+        <param name="z_hit" value="$(arg z_hit)" type="double" />
+        <param name="z_rand" value="$(arg z_rand)" type="double" />
+        <param name="z_max" value="$(arg z_max)" type="double" />
+        <param name="var_hit" value="$(arg var_hit)" type="double" />
+        <param name="range_reso" value="$(arg range_reso)" type="double" />
+        <param name="unknown_lambda" value="$(arg unknown_lambda)" type="double" />
+        <param name="range_max" value="$(arg range_max)" type="double" />
+
+        <param name="voxel_leaf_size" value="$(arg voxel_leaf_size)" type="double" />
+
+        <param name="opt_max_iter_num" value="$(arg opt_max_iter_num)" type="int" />
+        <param name="opt_max_error" value="$(arg opt_max_error)" type="double" />
+
+        <param name="optimized_particle_num" value="$(arg optimized_particle_num)" type="int" />
+        <param name="optimized_pose_cov_coef" value="$(arg optimized_pose_cov_coef)" type="double" />
+        <param name="gmm_postion_var" value="$(arg gmm_postion_var)" type="double" />
+        <param name="gmm_angle_var" value="$(arg gmm_angle_var)" type="double" />
+
+        <param name="ahrs_filter_kp" value="$(arg ahrs_filter_kp)" type="double" />
+        <param name="ahrs_filter_ki" value="$(arg ahrs_filter_ki)" type="double" />
+
+        <param name="log_file" value="$(arg log_file)" type="string" />
+        <param name="write_log" value="$(arg write_log)" type="bool" />
+    </node >
+</launch >

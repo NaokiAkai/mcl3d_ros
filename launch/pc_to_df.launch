@@ -1,0 +1,35 @@
+<!-- pc_to_df.launch -->
+<launch >
+    <arg name="node_name" default="pc_to_df" />
+
+    <arg name="from_pcd_file" default="true" />
+
+    <!-- if from_pcd_file is true, pcd_file must be appropriately set. -->
+    <!-- <arg name="pcd_file" default="$(find als_ros_3d)/data/map.pcd" /> -->
+    <arg name="pcd_file" default="$(find mcl3d_ros)/data/map_mcl_3dl.pcd" />
+
+    <!-- if from_pcd_file is false, sensor_msgs::PointClooud2 will be received. -->
+    <arg name="map_points_name" default="/map_points" />
+
+    <!-- map parameters -->
+    <arg name="map_file_name" default="dist_map_mcl_3dl.bin" />
+    <arg name="resolution" default="5.0" />
+    <arg name="sub_map_resolution" default="0.1" />
+    <arg name="map_margin" default="1.0" />
+    <!-- <arg name="yaml_file_path" default="$(find als_ros_3d)/data/dist_map_mcl_3dl.yaml" /> -->
+    <arg name="yaml_file_path" default="$(find mcl3d_ros)/data/dist_map_mcl_3dl.yaml" />
+
+    <!-- from pcd file -->
+    <node name="pc_to_df" pkg="mcl3d_ros" type="pc_to_df" output="screen" if="$(arg from_pcd_file)"
+        args="$(arg pcd_file) $(arg map_file_name) $(arg resolution) $(arg sub_map_resolution) $(arg map_margin) $(arg yaml_file_path)" />
+
+    <!-- from ROS message -->
+    <node name="$(arg node_name)" pkg="mcl3d_ros" type="pc_to_df" output="screen" args="NULL" unless="$(arg from_pcd_file)" >
+        <param name="map_points_name" value="$(arg map_points_name)" type="string" />
+        <param name="map_file_name" value="$(arg map_file_name)" type="string" />
+        <param name="resolution" value="$(arg resolution)" type="double" />
+        <param name="sub_map_resolution" value="$(arg sub_map_resolution)" type="double" />
+        <param name="map_margin" value="$(arg map_margin)" type="double" />
+        <param name="yaml_file_path" value="$(arg yaml_file_path)" type="string" />
+    </node >
+</launch >

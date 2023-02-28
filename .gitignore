@@ -1,3 +1,7 @@
+# map files
+data/*bin
+data/*yaml
+
 # Prerequisites
 *.d
 
