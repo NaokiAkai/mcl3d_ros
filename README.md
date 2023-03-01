@@ -70,3 +70,9 @@ Note that other map formats are not supported currently.
 # Parameters
 
 There are launch files at the launch directory. Descriptions of all the parameters can be seen in the launch files.
+
+### 
+
+# License
+
+This software is subject to the [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html) License.
