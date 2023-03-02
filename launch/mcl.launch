@@ -6,10 +6,11 @@
     <arg name="use_sensor_points_merger" default="false" />
 
     <!-- yaml file of a target environment -->
-    <arg name="map_yaml_file" default="$(find mcl3d_ros)/data/dist_map_hdl.yaml" />
+    <!-- <arg name="map_yaml_file" default="$(find mcl3d_ros)/data/dist_map_hdl.yaml" /> -->
+    <arg name="map_yaml_file" default="/media/akai/ssd/mcl3d_maps/kitti/05/dist_map_static_objects.yaml" />
 
     <!-- Initial pose (default initial pose is set for hdl log data) -->
-    <rosparam param="/$(arg node_name)/initial_pose" > [0.0, 0.0, 1.8, 0.0, 0.0, 0.0] </rosparam >
+    <rosparam param="/$(arg node_name)/initial_pose" > [0.0, 0.0, 0.0, 0.0, 0.0, 90.0] </rosparam >
 
 
     <!-- 0: measurement model optimization (similar to ICP scan matching) -->

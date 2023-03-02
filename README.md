@@ -5,11 +5,11 @@ mcl3d_ros is a ROS package of 3D-LiDAR-based Monte Carlo localization. It also c
 
 # Main characteristics
 
-mcl3d_ros can efficiently perform 3D-LiDAR-based MCL. To achieve it, mcl3d_ros uses measurement model optimization using a distance field and fusion of it with MCL via importance sampling. In short, mcl3d_ros uses two probabilistic distributions are used to sample the particles and fuses them. For more details, please refer this [preprint](https://).
+mcl3d_ros can efficiently perform 3D-LiDAR-based MCL. To achieve it, mcl3d_ros uses measurement model optimization using a distance field and fusion of it with MCL via importance sampling. In short, mcl3d_ros uses two probabilistic distributions are used to sample the particles and fuses them. For more details, please refer this [preprint](https://arxiv.org/abs/2303.00216).
 
 ```
 @misc{akai_arxiv2023_mcl3d,
-  url = {https://arxiv.org/abs/},
+  url = {https://arxiv.org/abs/2303.00216},
   author = {Akai, Naoki},
   title = {Efficient Solution to {3D-LiDAR}-based {Monte Carlo} Localization with Fusion of Measurement Model Optimization via Importance Sampling},
   publisher = {arXiv},

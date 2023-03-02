@@ -830,23 +830,6 @@ void MCL::optimizeMeasurementModel(pcl::PointCloud<pcl::PointXYZ>::Ptr sensorPoi
     double optPoseYaw = modAngle(sensorYaw - baseLink2Laser_.getYaw());
     optPose_.setPose(optPoseX, optPoseY, optPoseZ, optPoseRoll, optPosePitch, optPoseYaw);
 
-    // add noise to the optimization result to validate robustness
-    static double time = getTime();
-    if (getTime() - time > 1.0) {
-        printf("\n\n!!!!!!!!!!!Added noise!!!!!!!!!!!\n\n\n");
-        time = getTime();
-        optPose_.setX(optPoseX + nrand(0.3));
-        optPose_.setY(optPoseY + nrand(0.3));
-        optPose_.setZ(optPoseZ + nrand(0.3));
-        optPose_.setRoll(modAngle(optPoseRoll + nrand(0.0)));
-        optPose_.setPitch(modAngle(optPosePitch + nrand(0.0)));
-        optPose_.setYaw(modAngle(optPoseYaw + nrand(0.0)));
-        for (int i = 0; i < 6; ++i) {
-            for (int j = 0; j < 6; ++j)
-                approximateHessian_[i][j] *= 0.5;
-        }
-    }
-
     // determine covariane matrix against the optimization result with the approximated Hessian by Jacobian
     optPoseCov_ = getInverseMatrix(approximateHessian_);
     for (int i = 0; i < 6; ++i) {
