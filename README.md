@@ -1,11 +1,13 @@
 # mcl3d_ros
-mcl3d_ros is a ROS package of 3D-LiDAR-based Monte Carlo localization. It also contains localization methods using distance-field-based optimization and extended-Kalman-filter-based fusion. The localizers work withtou INS such as odometry and IMU. Of course, INS can be available and it improves localization performance.
+mcl3d_ros is a ROS package of 3D-LiDAR-based Monte Carlo localization (MCL) and also contains localization methods using distance-field-based optimization and extended-Kalman-filter-based fusion. The localizers work without INS such as odometry. Of course, INS can be available and it improves localization performance (current version does not support IMU).
+
+![](doc/demo.gif)
 
 
 
 # Main characteristics
 
-mcl3d_ros can efficiently perform 3D-LiDAR-based MCL. To achieve it, mcl3d_ros uses measurement model optimization using a distance field and fusion of it with MCL via importance sampling. In short, mcl3d_ros uses two probabilistic distributions are used to sample the particles and fuses them. For more details, please refer this [preprint](https://arxiv.org/abs/2303.00216).
+mcl3d_ros can efficiently perform 3D-LiDAR-based MCL. To achieve it, mcl3d_ros uses measurement model optimization using a distance field and fusion of it with MCL via importance sampling. In short, mcl3d_ros uses two probabilistic distributions to sample the particles and fuses them. For more details, please refer this [preprint](https://arxiv.org/abs/2303.00216).
 
 ```
 @misc{akai_arxiv2023_mcl3d,
